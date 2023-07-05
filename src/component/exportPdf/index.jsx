@@ -23,6 +23,8 @@ import RobotoLightItalic from "../../fonts/Roboto-LightItalic.ttf";
 import RobotoThinItalic from "../../fonts/Roboto-ThinItalic.ttf";
 import RobotoBold from "../../fonts/Roboto-Bold.ttf";
 import RobotoRegularItalic from "../../fonts/Roboto-Italic.ttf";
+import { useContext } from "react";
+import { ResumeContext } from "../../context/resumeContext";
 
 Font.register({
   family: "Roboto-Bold",
@@ -119,8 +121,6 @@ const styles = StyleSheet.create({
   education: {},
 });
 
-Font.register({ family: "Roboto", src: "" });
-
 const listData = ["Item 1", "Item 2", "Item 3"];
 
 const ListComponent = () => (
@@ -154,15 +154,16 @@ function ExportPdf() {
       link: "https://www.google.com",
     },
   ];
-
+  const { data } = useContext(ResumeContext);
+  console.log(data);
   return (
     <Document>
       <Page size="LETTER" style={styles.page}>
         <View style={styles.heading}>
           <View>
-            <Text style={styles.candidateName}>Veeresh R M</Text>
-            <Text style={styles.candidateBio}>Undergrad&lsquo; Computer Science Student</Text>
-            <View style={styles.candidateContact}>
+            <Text style={styles.candidateName}>{data.about.name.text}</Text>
+            <Text style={styles.candidateBio}>{data.about.bio.text}</Text>
+            {/* <View style={styles.candidateContact}>
               <View style={styles.candidateContactText}>
                 <Text>Email:</Text>
                 <Image style={styles.contactIcon} src={Mail} />
@@ -175,17 +176,48 @@ function ExportPdf() {
                 <Text>LinkedIn:</Text>
                 <Image style={styles.contactIcon} src={Mail} />
               </View>
-            </View>
+            </View> */}
           </View>
           <View>
-            <Image
+            {/* <Image
               style={styles.profileImage}
               src="https://avatars.githubusercontent.com/u/56132780?v=4"
-            />
+            /> */}
           </View>
         </View>
-        <PdfSection title="Skills" points={skills} type="bullet" />
-        <PdfSection title="Skills" points={skills} type="bullet" />
+        {data.education.length > 0 && (
+          <PdfSection title="Education">
+            <PdfEduSection education={data.education} />
+          </PdfSection>
+        )}
+
+        {data.skills.length > 0 && (
+          <PdfSection title="Skills">
+            <PdfSkillSection skills={data.skills} />
+          </PdfSection>
+        )}
+
+        {data.experience.length > 0 && (
+          <PdfSection title="Experience">
+            <PdfExpSection experience={data.experience} />
+          </PdfSection>
+        )}
+
+        {data.projects.length > 0 && (
+          <PdfSection title="Projects">
+            <PdfProjectSection projects={data.projects} />
+          </PdfSection>
+        )}
+        {data.hobbies.length > 0 && (
+          <PdfSection title="Hobbies">
+            <PdfHobbySection hobbies={data.hobbies} />
+          </PdfSection>
+        )}
+
+        {/* <PdfSection title="Education" points={data.education} type="bullet" />
+        <PdfSection title="Experience" points={data.experience} type="bullet" />
+        <PdfSection title="Project" points={data.projects} type="bullet" />
+        <PdfSection title="Hobbies" points={data.hobbies} type="bullet" /> */}
       </Page>
     </Document>
   );
@@ -193,9 +225,9 @@ function ExportPdf() {
 
 // eslint-disable-next-line react/prop-types
 
-const PdfSection = ({ title, points, type }) => {
+const PdfSection = ({ title, children }) => {
   return (
-    <View style={{ padding: "5mm 8mm 2mm 8mm" }}>
+    <View style={{ padding: "4mm 8mm 0 8mm" }}>
       <Text style={{ fontSize: "5.84mm", fontFamily: "Roboto-Medium" }}>{title}</Text>
       <Svg height={4} width="100%">
         <Line
@@ -209,44 +241,179 @@ const PdfSection = ({ title, points, type }) => {
           stroke="#DBC36B"
         />
       </Svg>
-      <PdfPoint texts={points} type={type} />
+      {children}
     </View>
   );
 };
 
-const PdfPoint = ({ texts, type }) => {
+const PdfEduSection = ({ education }) => {
+  const type = "bullet";
+  return (
+    <View style={{ padding: "1mm 0 0 0" }}>
+      {education.map((edu) => (
+        <View
+          key={edu.id}
+          style={{
+            fontSize: "3.7mm",
+            padding: "0 6mm 0 3mm",
+            fontFamily: "Roboto-Regular",
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}>
+          <Text>
+            {"•"} {edu.degree} {"(" + edu.year + ")"}
+          </Text>
+
+          <Text>{edu.institution}</Text>
+          <Text>{edu.grade}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const PdfSkillSection = ({ skills }) => {
+  return (
+    <View
+      style={{
+        padding: "1mm 0 0 0",
+        display: "flex",
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-evenly",
+      }}>
+      {skills.map((skill) => (
+        <View
+          key={skill.id}
+          style={{
+            backgroundColor: "#DBC36B",
+            color: "#f6f6f6",
+            borderRadius: "20%",
+            padding: "2mm",
+          }}>
+          <Text style={{ fontSize: "3.9mm", fontFamily: "Roboto-Medium" }}>{skill.name}</Text>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const PdfExpSection = ({ experience }) => {
+  return (
+    <View style={{ padding: "1mm 0 0 0" }}>
+      {experience.map((exp) => (
+        <View
+          key={exp.id}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}>
+          <Text
+            style={{ fontSize: "4.8mm", padding: "1.5mm 0 1mm 0", fontFamily: "Roboto-Medium" }}>
+            {exp.name} {"(" + exp?.joining + `- ${exp.leaving}` + ")"} {"| " + exp.role}
+          </Text>
+          <PdfPoints texts={exp.description} type="bullet" />
+          {exp.link !== "" && (
+            <Link
+              src={exp.link}
+              style={{
+                fontSize: "3.7mm",
+                padding: "0 0 0 3mm",
+                fontFamily: "Roboto-RegularItalic",
+                color: "black",
+              }}>
+              {exp.link}
+            </Link>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const PdfProjectSection = ({ projects }) => {
+  return (
+    <View style={{ padding: "1mm 0 0 0" }}>
+      {projects.map((project) => (
+        <View
+          key={project.id}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}>
+          <Text
+            style={{ fontSize: "4.8mm", padding: "1.5mm 0 1mm 0", fontFamily: "Roboto-Medium" }}>
+            {project.name}
+          </Text>
+          <PdfPoints texts={project.description} type="bullet" />
+          {project.link !== "" && (
+            <Link
+              src={project.link}
+              style={{
+                fontSize: "3.7mm",
+                padding: "0 0 0 3mm",
+                fontFamily: "Roboto-RegularItalic",
+                color: "black",
+              }}>
+              {project.link}
+            </Link>
+          )}
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const PdfHobbySection = ({ hobbies }) => {
+  return (
+    <View style={{ padding: "1mm 0 0 0" }}>
+      {hobbies.map((hobby) => (
+        <View
+          key={hobby.id}
+          style={{
+            fontSize: "3.7mm",
+            padding: "0 6mm 0 3mm",
+            fontFamily: "Roboto-Regular",
+            display: "flex",
+            flexDirection: "row",
+            gap: "2mm",
+          }}>
+          <Text>
+            {"•"} {hobby.name}{" "}
+          </Text>
+          <View style={{ display: "flex", flexDirection: "row", gap: "1mm" }}>
+            {hobby.description.length > 0 &&
+              hobby.description.map((desc) => <Text key={desc.id}>{desc.text} </Text>)}
+          </View>
+        </View>
+      ))}
+    </View>
+  );
+};
+
+const PdfPoint = ({ text, type, ...rest }) => {
+  return (
+    <View>
+      <Text style={{ fontSize: "3.7mm", padding: "0 0 0 3mm", fontFamily: "Roboto-Regular" }}>
+        {type === "bullet" ? "•" : index + 1 + "."} {text}
+      </Text>
+    </View>
+  );
+};
+
+const PdfPoints = ({ texts, type }) => {
   return (
     <View>
       {
         // eslint-disable-next-line react/prop-types
-        texts.map(({ text, link, title }, index) => (
-          <View key={index}>
-            {title && (
-              <Text
-                style={{
-                  fontSize: "4.2mm",
-                  padding: "1.5mm 0 1.5mm 5mm",
-                  fontFamily: "Roboto-Regular",
-                }}>
-                {title}
-              </Text>
-            )}
-            <Text
-              style={{ fontSize: "3.7mm", padding: "1mm 0 0 5mm", fontFamily: "Roboto-Regular" }}>
+        texts.map(({ text, id }, index) => (
+          <View key={id}>
+            <Text style={{ fontSize: "3.7mm", padding: "0 0 0 3mm", fontFamily: "Roboto-Regular" }}>
               {type === "bullet" ? "•" : index + 1 + "."} {text}
             </Text>
-            {link !== "" && (
-              <Link
-                src={link}
-                style={{
-                  fontSize: "3.7mm",
-                  padding: "1mm 0 0 5mm",
-                  fontFamily: "Roboto-RegularItalic",
-                  color: "black",
-                }}>
-                {link}
-              </Link>
-            )}
           </View>
         ))
       }
