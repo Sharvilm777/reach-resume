@@ -16,7 +16,7 @@ const Input = ({
 }) => {
   return (
     <div className="flex flex-col gap-1 w-full my-2">
-      <label htmlFor={id} className="font-semibold text-gray-400">
+      <label htmlFor={id} className="font-semibold text-black">
         {label}
       </label>
       {!textarea ? (
@@ -28,7 +28,7 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className={`flex w-full border p-2 rounded bg-slate-200 ${
+          className={`flex w-full border p-2 rounded bg-white ${
             error ? "outline outline-red-400" : "outline-blue-200"
           } `}
         />
@@ -41,7 +41,7 @@ const Input = ({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
-          className={`flex w-full border p-2 rounded bg-slate-100 ${
+          className={`flex w-full border p-2 rounded bg-white ${
             error ? "outline outline-red-400" : "outline-blue-200"
           } `}
         />

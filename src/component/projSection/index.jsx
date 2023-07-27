@@ -6,7 +6,7 @@ import Chip from "../chip";
 import { patternMatch } from "../../helpers";
 import { linkRegexPattern } from "../../constants/patterns";
 
-const ProjSection = () => {
+const ProjSection = ({ onSaveAndSubmit }) => {
   const { data, setData } = useContext(ResumeContext);
   const [verify, setVerify] = useState(false);
   const [error, setError] = useState(false);
@@ -50,7 +50,10 @@ const ProjSection = () => {
       descArr.push(obj);
     });
 
-    setData({ ...data, projects: [...data.projects, { ...val, description: descArr }] });
+    setData({
+      ...data,
+      projects: [...data.projects, { ...val, description: descArr }],
+    });
     setVal({
       id: generateId(),
       name: "",
@@ -74,7 +77,12 @@ const ProjSection = () => {
   console.log(data.projects, "projects");
 
   return (
-    <InputFrom title="Projects" onSubmit={onProjSave}>
+    <InputFrom
+      title="Projects"
+      onSubmit={onProjSave}
+      isMore={true}
+      next={onSaveAndSubmit}
+    >
       <div className="flex flex-wrap">
         {data.projects.length > 0 &&
           data.projects.map((ele) => (

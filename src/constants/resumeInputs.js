@@ -1,4 +1,4 @@
-export const ResumeIput = {
+export const ResumeInput = {
   about: {
     name: {
       type: "text",
@@ -37,4 +37,5 @@ export const ResumeIput = {
   skills: [],
   experience: [],
   hobbies: [],
+
 };

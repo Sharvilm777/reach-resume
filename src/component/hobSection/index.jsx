@@ -4,7 +4,8 @@ import { useContext, useState } from "react";
 import { ResumeContext } from "../../context/resumeContext";
 import Chip from "../chip";
 
-const HobSection = () => {
+// eslint-disable-next-line react/prop-types
+const HobSection = ({ onSaveAndSubmit }) => {
   const { data, setData } = useContext(ResumeContext);
 
   const generateId = () => {
@@ -32,7 +33,10 @@ const HobSection = () => {
       descArr.push(obj);
     });
 
-    setData({ ...data, hobbies: [...data.hobbies, { ...val, description: descArr }] });
+    setData({
+      ...data,
+      hobbies: [...data.hobbies, { ...val, description: descArr }],
+    });
     setVal({
       id: generateId(),
       name: "",
@@ -48,7 +52,13 @@ const HobSection = () => {
   console.log(data.hobbies, "Hobbies");
 
   return (
-    <InputFrom title="Hobbies" onSubmit={onHobbiesSave}>
+    <InputFrom
+      title="Hobbies"
+      onSubmit={onHobbiesSave}
+      isMore={true}
+      next={onSaveAndSubmit}
+      preview={true}
+    >
       <div className="flex flex-wrap">
         {data.hobbies.length > 0 &&
           data.hobbies.map((ele) => (

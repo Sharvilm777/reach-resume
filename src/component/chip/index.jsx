@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
 
-
-const Chip = ({ name, id, remove,  }) => {
-  const removeSkill = (skillId) => {  
-    remove(skillId)
+const Chip = ({ name, id, remove }) => {
+  const removeSkill = (skillId) => {
+    remove(skillId);
   };
   return (
     <div
@@ -14,7 +13,7 @@ const Chip = ({ name, id, remove,  }) => {
       {name ? name : "Name"}
       <span
         data-te-chip-close
-        className="float-right w-4 cursor-pointer pl-[8px] text-[16px] text-gray-200 opacity-[.53] transition-all duration-200  ease-linear scale-110"
+        className="float-right w-4 cursor-pointer pl-[8px] text-[16px] text-gray-600 opacity-[.53] transition-all duration-200  ease-linear scale-110"
         onClick={() => removeSkill(id)}
       >
         <svg

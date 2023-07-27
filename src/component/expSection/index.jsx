@@ -6,7 +6,8 @@ import Chip from "../chip";
 import { patternMatch } from "../../helpers";
 import { linkRegexPattern } from "../../constants/patterns";
 
-const ExpSection = () => {
+// eslint-disable-next-line react/prop-types
+const ExpSection = ({ onSaveAndSubmit }) => {
   const { data, setData } = useContext(ResumeContext);
   const [verify, setVerify] = useState(false);
   const [error, setError] = useState(false);
@@ -53,7 +54,10 @@ const ExpSection = () => {
       descArr.push(obj);
     });
 
-    setData({ ...data, experience: [...data.experience, { ...val, description: descArr }] });
+    setData({
+      ...data,
+      experience: [...data.experience, { ...val, description: descArr }],
+    });
     setVal({
       id: generateId(),
       name: "",
@@ -80,7 +84,12 @@ const ExpSection = () => {
   console.log(data.experience, "Experience");
 
   return (
-    <InputFrom title="Experience" onSubmit={onExpSave}>
+    <InputFrom
+      title="Experience"
+      onSubmit={onExpSave}
+      isMore={true}
+      next={onSaveAndSubmit}
+    >
       <div className="flex flex-wrap">
         {data.experience.length > 0 &&
           data.experience.map((ele) => (

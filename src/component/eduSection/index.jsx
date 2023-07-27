@@ -4,7 +4,8 @@ import { useContext, useState } from "react";
 import { ResumeContext } from "../../context/resumeContext";
 import Chip from "../chip";
 
-const EduSection = () => {
+// eslint-disable-next-line react/prop-types
+const EduSection = ({ onSaveAndSubmit }) => {
   const { data, setData } = useContext(ResumeContext);
   const generateId = () => {
     return Math.random().toString(36).substr(2, 9);
@@ -39,7 +40,13 @@ const EduSection = () => {
   };
 
   return (
-    <InputFrom title="Education" onSubmit={onEduSave}>
+    <InputFrom
+      title="Education"
+      onSubmit={onEduSave}
+      isMore={true}
+      next={onSaveAndSubmit}
+      preview={true}
+    >
       <div className="flex flex-wrap">
         {data.education.length > 0 &&
           data.education.map((ele) => (
@@ -52,8 +59,8 @@ const EduSection = () => {
         id="edu"
         value={val.degree}
         onChange={(e) => handleEduChange(e, "degree")}
-        placeholder="Name of the Degree"
-        label="Degree"
+        placeholder="Name of the Degree/Course"
+        label="Degree/Course"
       />
       <Input
         id="edu"

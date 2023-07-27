@@ -117,7 +117,7 @@ const searchSelect = {
     relative
     `,
   labelClass: `
-    font-semibold text-gray-400
+    font-semibold text-black
     `,
   inputClass: `
     flex border p-2 rounded bg-slate-100 outline-blue-200
@@ -136,7 +136,8 @@ const searchSelect = {
     p-2 font-semibold cursor-pointer hover:bg-blue-100
     `,
 };
-const SkillSection = () => {
+// eslint-disable-next-line react/prop-types
+const SkillSection = ({ onSaveAndSubmit }) => {
   const [selected, setSelected] = useState([]);
   const { data, setData } = useContext(ResumeContext);
   const [change, setChange] = useState("");
@@ -173,7 +174,12 @@ const SkillSection = () => {
     console.log(data);
   };
   return (
-    <InputFrom title={"Skills"} onSubmit={onSkillSave}>
+    <InputFrom
+      title={"Skills"}
+      onSubmit={onSkillSave}
+      isMore={true}
+      next={onSaveAndSubmit}
+    >
       <div className="flex gap-4 items-center">
         <SearchSelect
           wrapperClass={searchSelect.wrapperClass}
@@ -197,7 +203,12 @@ const SkillSection = () => {
           {selected.length > 0 &&
             selected.map((ele) => (
               <div key={ele.id}>
-                <Chip name={ele?.name} id={ele.id} remove={removeSkill} selected={selected} />
+                <Chip
+                  name={ele?.name}
+                  id={ele.id}
+                  remove={removeSkill}
+                  selected={selected}
+                />
               </div>
             ))}
         </div>

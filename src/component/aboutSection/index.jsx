@@ -5,7 +5,7 @@ import Input from "../input";
 import { patternMatch } from "../../helpers";
 import { ResumeContext } from "../../context/resumeContext";
 
-const AboutSection = () => {
+const AboutSection = ({ onSaveAndSubmit }) => {
   const { data, setData } = useContext(ResumeContext);
 
   const [val, setVal] = useState(data.about);
@@ -55,7 +55,12 @@ const AboutSection = () => {
     return () => clearTimeout(timer);
   }, [validation]);
   return (
-    <InputFrom title={"About"} onSubmit={onAboutSubmit}>
+    <InputFrom
+      title={"About"}
+      onSubmit={onAboutSubmit}
+      next={onSaveAndSubmit}
+      isMore={false}
+    >
       <div className="flex gap-2 justify-between w-full">
         <Input
           id={val.name.title}
